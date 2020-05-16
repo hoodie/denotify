@@ -1,0 +1,15 @@
+[package]
+name = "denotify"
+version = "0.1.0"
+authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+notify-rust = "3.6.3"
+deno_core = "0.45.0"
