@@ -17,11 +17,25 @@ const filename =
 Deno.openPlugin(filename);
 
 //@ts-ignore
-const { send } = Deno.core.ops();
+const { show } = Deno.core.ops();
 
 const textEncoder = new TextEncoder();
 
+type Option<T> = T | undefined;
+
+interface NotificationPayload {
+  appname: string;
+  summary: string;
+  subtitle: string;
+  body: string;
+  icon: string;
+  actions: Array<string>;
+  soundName: string;
+}
+
 export class Notification {
+  private payload: Partial<NotificationPayload> = {};
+
   static new() {
     return new Notification();
   }
@@ -29,11 +43,44 @@ export class Notification {
   constructor() {
   }
 
-  send(content: string) {
+  summary(summary: string): Notification {
+    this.payload.summary = summary;
+    return this;
+  }
+
+  appname(appname: string): Notification {
+    this.payload.appname = appname;
+    return this;
+  }
+
+  subtitle(subtitle: string): Notification {
+    this.payload.subtitle = subtitle;
+    return this;
+  }
+
+  body(body: string): Notification {
+    this.payload.body = body;
+    return this;
+  }
+
+  icon(icon: string): Notification {
+    this.payload.icon = icon;
+    return this;
+  }
+
+  soundName(soundName: string): Notification {
+    this.payload.soundName = soundName;
+    return this;
+  }
+
+  /** just for testing for now */
+  show() {
+    const payload = JSON.stringify(this.payload);
+    console.debug(payload);
     //@ts-ignore
     return Deno.core.dispatch(
-      send,
-      textEncoder.encode(content),
+      show,
+      textEncoder.encode(payload),
     )!;
   }
 }
