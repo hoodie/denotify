@@ -38,10 +38,10 @@ export interface NotificationPayload {
 export function show(
   notification: Readonly<Partial<NotificationPayload>>,
 ): Result {
+  const payload = JSON.stringify(notification);
+
   // @ts-ignore
   const { show } = Deno.core.ops();
-  const payload = JSON.stringify(notification);
-  console.debug(notification);
   //@ts-ignore
   const response = Deno.core.dispatch(
     show,

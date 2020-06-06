@@ -34,14 +34,10 @@ pub struct Notification {
 impl Notification {
     pub fn show(&self) -> SerialiableResult {
         let notification: notify_rust::Notification = self.into();
-        // serde_json::to_string()
-        // TODO: forcing and error here
-        let e: notify_rust::error::Error = notify_rust::error::ErrorKind::Msg("test".into()).into();
-        SerialiableResult::Err(e.into())
-        //match notification.show() {
-        //    Ok(_handle) => SerialiableResult::Ok,
-        //    Err(err) => SerialiableResult::Err(err.into())
-        //}
+        match notification.show() {
+            Ok(_handle) => SerialiableResult::Ok,
+            Err(err) => SerialiableResult::Err(err.into())
+        }
     }
 }
 

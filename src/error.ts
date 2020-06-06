@@ -9,7 +9,7 @@ export type ResultRaw<T, E = DenotifyError> = {
 
 export type ResultMatchers<T, E> = {
   [P in keyof Required<ResultRaw<T, E>>]: (
-    x: NonNullable<ResultRaw<T, E>[P]>,
+    x: ResultRaw<T, E>[P],
   ) => void;
 };
 
@@ -24,14 +24,10 @@ export class Result<T = undefined, E = DenotifyError> {
   public match(
     matchers: ResultMatchers<T, E>,
   ) {
-    if (this.content.Err) {
+    if (this.content.hasOwnProperty("Err")) {
       matchers.Err(this.content.Err!);
-    } else if (this.content.Ok) {
-      matchers.Ok(this.content.Ok!);
     } else {
-      throw new Error(
-        "inconsistent content" + JSON.stringify(this.content, null, 4),
-      );
+      matchers.Ok(this.content.Ok!);
     }
   }
 }
