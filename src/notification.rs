@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::error::SerialiableResult;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Notification {
     /// Filled by default with executable name.
@@ -30,9 +32,16 @@ pub struct Notification {
 }
 
 impl Notification {
-    pub fn show(&self) {
+    pub fn show(&self) -> SerialiableResult {
         let notification: notify_rust::Notification = self.into();
-        notification.show().unwrap();
+        // serde_json::to_string()
+        // TODO: forcing and error here
+        let e: notify_rust::error::Error = notify_rust::error::ErrorKind::Msg("test".into()).into();
+        SerialiableResult::Err(e.into())
+        //match notification.show() {
+        //    Ok(_handle) => SerialiableResult::Ok,
+        //    Err(err) => SerialiableResult::Err(err.into())
+        //}
     }
 }
 

@@ -1,23 +1,26 @@
 use deno_core::plugin_api::{Buf, Interface, Op, ZeroCopyBuf};
 
+mod error;
 mod notification;
 
 use crate::notification::Notification;
 
 #[no_mangle]
 pub fn deno_plugin_init(interface: &mut dyn Interface) {
-    interface.register_op("show", show);
+    interface.register_op("show", op_show);
 }
 
-pub fn show(_interface: &mut dyn Interface, data: &[u8], _zero_copy: &mut [ZeroCopyBuf]) -> Op {
+pub fn op_show(_interface: &mut dyn Interface, data: &[u8], _zero_copy: &mut [ZeroCopyBuf]) -> Op {
     match serde_json::from_slice::<'_, Notification>(data) {
         Ok(notification) => {
-            notification.show();
+            let result = serde_json::to_string(&notification.show()).unwrap();
+            let result_box: Buf = Buf::from(result.as_bytes());
+            Op::Sync(result_box)
         }
-        Err(e) => eprintln!("{}", e),
+        Err(e) => {
+            eprintln!("{}", e);
+            let result_box: Buf = Buf::from(format!("{}", e).as_bytes());
+            Op::Sync(result_box)
+        }
     }
-
-    let result = b"true";
-    let result_box: Buf = Box::new(*result);
-    Op::Sync(result_box)
 }
