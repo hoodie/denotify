@@ -11,12 +11,10 @@ crate-type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-notify-rust = "4.0.0-rc.1"
-deno_core = "0.45.0"
+notify-rust = "4.0"
+deno_core = "0.47"
+serde_json = "1.0"
 
 [dependencies.serde]
 version = "1.0"
 features = ["derive"]
-
-[dependencies.serde_json]
-version = "1.0"
